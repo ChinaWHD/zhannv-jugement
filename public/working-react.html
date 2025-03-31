@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>元宇宙衙门 - 渣男公审大会</title>
+  <meta charset="UTF-8">
+  <script>
+    // 添加调试输出
+    console.log('页面已加载');
+    document.write('<p>加载中...</p>');
+  </script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" 
+          onload="console.log('React loaded')" 
+          onerror="console.error('Failed to load React')"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+          onload="console.log('ReactDOM loaded')"
+          onerror="console.error('Failed to load ReactDOM')"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1 { color: #333; }
+    textarea { width: 100%; padding: 10px; margin: 10px 0; }
+    button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>页面正在加载中...</h1>
+  <div id="app"></div>
+  <script>
+    // 使用纯JS实现React组件
+    console.log('开始初始化React');
+    try {
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM已加载完成');
+        const appElement = document.getElementById('app');
+        console.log('App元素:', appElement);
+        
+        if (typeof React === 'undefined') {
+          document.body.innerHTML += '<p style="color:red">错误: React未加载</p>';
+          return;
+        }
+        
+        if (typeof ReactDOM === 'undefined') {
+          document.body.innerHTML += '<p style="color:red">错误: ReactDOM未加载</p>';
+          return;
+        }
+        
+        const root = ReactDOM.createRoot(appElement);
+        console.log('创建了Root');
+        
+        // 创建简单UI
+        const App = React.createElement('div', null, [
+          React.createElement('h1', {key: 'title'}, '元宇宙衙门 - 渣男公审大会'),
+          React.createElement('div', {key: 'form'}, [
+            React.createElement('textarea', {
+              key: 'input',
+              placeholder: '输入聊天记录或情感经历...',
+              rows: 6
+            }),
+            React.createElement('button', {key: 'submit'}, '提交公审')
+          ])
+        ]);
+        
+        console.log('渲染App');
+        root.render(App);
+        console.log('渲染完成');
+      });
+    } catch (e) {
+      console.error('发生错误:', e);
+      document.body.innerHTML += '<p style="color:red">错误: ' + e.message + '</p>';
+    }
+  </script>
+</body>
+</html>

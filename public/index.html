@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>元宇宙衙门 - 情感顾问</title>
+  <meta charset="UTF-8">
+  <style>
+    body { 
+      font-family: 'SimSun', '宋体', serif; 
+      margin: 0; 
+      padding: 0; 
+      background-color: #f9f6e8;
+    }
+    
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      position: relative;
+    }
+    
+    header {
+      background-color: #8b0000;
+      color: #f9f6e8;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 24px;
+      font-weight: bold;
+      border-bottom: 4px solid #5a0000;
+    }
+    
+    .courtroom {
+      width: 100%;
+      height: 300px;
+      background-image: url('/assets/background.jpg');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 将鼓放在中右侧 */
+      justify-content: flex-end;
+      padding-bottom: 20px;
+    }
+    
+    .drum {
+      width: 300px; /* 增大鼓的尺寸到300px */
+      height: 300px;
+      background-image: url('/assets/drum.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-bottom: 10px;
+      position: absolute;
+      bottom: 0; /* 调整使支架接触地面 */
+      right: 15%; /* 更靠近右侧一些 */
+      z-index: 10;
+    }
+    
+    .drum:hover {
+      transform: scale(1.05);
+    }
+    
+    .drum:active {
+      transform: scale(0.95);
+    }
+    
+    .drum-instruction {
+      color: #fff;
+      background-color: rgba(0,0,0,0.7);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      position: absolute;
+      top: 50%; /* 放在鼓面中间 */
+      left: 50%;
+      transform: translate(-50%, -50%); /* 居中 */
+      pointer-events: none; /* 确保点击能穿透到鼓 */
+      z-index: 11;
+      white-space: nowrap;
+    }
+    
+    .navigation {
+      display: flex;
+      justify-content: center;
+      margin: 15px 0;
+    }
+    
+    .nav-button {
+      padding: 10px 20px;
+      background-color: #8b0000;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 0 10px;
+      font-size: 16px;
+    }
+    
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 300px; /* 增加高度确保内容都能显示 */
+      margin: 20px auto;
+      transform: translateY(0%); /* 从-10%调整为0%，向下移动10% */
+      max-width: 936px; /* 已经增加20% */
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .messages {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 15px;
+      background-color: #efefef;
+    }
+    
+    .user-message {
+      background-color: #d5eaff;
+      padding: 10px 15px;
+      border-radius: 18px 18px 0 18px;
+      margin: 8px 0;
+      margin-left: 30px;
+      display: inline-block;
+      max-width: 70%;
+      float: right;
+      clear: both;
+    }
+    
+    .bot-message {
+      background-color: #fff;
+      padding: 10px 15px;
+      border-radius: 18px 18px 18px 0;
+      margin: 8px 0;
+      margin-right: 30px;
+      display: inline-block;
+      max-width: 70%;
+      float: left;
+      clear: both;
+      border: 1px solid #ddd;
+    }
+    
+    .input-area {
+      display: flex;
+      justify-content: space-between; /* 确保元素分布均匀 */
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #fff;
+      border-top: 1px solid #ddd;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+      transform: translateY(0%); /* 移除transform，使用margin-top代替 */
+      margin-top: 15px; /* 加大间距 */
+      box-sizing: border-box;
+    }
+    
+    .file-upload {
+      margin-right: 10px;
+      flex-shrink: 0; /* 防止压缩 */
+    }
+    
+    .chat-input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      margin-right: 15px;
+      font-size: 14px;
+      min-width: 0; /* 允许flex项收缩至比内容更小 */
+    }
+    
+    .send-button {
+      width: 80px; /* 固定宽度 */
+      padding: 10px 15px;
+      background-color: #8b0000;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0; /* 防止压缩 */
+    }
+    
+    .judgment-panel {
+      display: none; /* 初始隐藏 */
+      width: 36%; /* 减小宽度，原来是60%，再减少40% */
+      max-width: 420px; /* 限制最大宽度，原来是700px，减少40% */
+      margin: 20px auto;
+      padding: 15px;
+      background-color: #f9f6e8;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 10;
+    }
+    
+    .judgment-input-container {
+      margin-bottom: 15px;
+    }
+    
+    .judgment-input {
+      width: 100%;
+      min-height: 120px; /* 减少高度，原来是150px，减少20% */
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: 'SimSun', '宋体', serif;
+      font-size: 16px;
+      resize: vertical;
+    }
+    
+    .judgment-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+    
+    .judgment-name-input {
+      width: 40%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: 'SimSun', '宋体', serif;
+    }
+    
+    .scroll-container {
+      position: relative;
+      margin: 15px 0;
+      height: 360px; /* 减小高度，原来是450px，减少20% */
+      background-image: url('/assets/scroll.jpg');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 15px;
+    }
+    
+    .scroll-content {
+      width: 40%; /* 卷轴内容宽度为卷轴宽度的40%，符合用户要求 */
+      max-height: 80%;
+      overflow-y: auto;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: 'SimSun', '宋体', serif;
+      position: relative;
+      visibility: visible;
+    }
+    
+    .judgment-title {
+      font-size: 32px;
+      color: #8b0000;
+      margin-top: 20%; /* 标题位置往下移20% */
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-align: center;
+      padding-top: 20px;
+    }
+    
+    .defendant-name {
+      font-size: 24px;
+      text-align: left;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    
+    .judgment-content {
+      font-size: 20px;
+      color: #000;
+      line-height: 1.8;
+      text-align: left;
+      text-indent: 2em;
+      margin-bottom: 30px;
+      flex-grow: 1; /* 让内容区域自适应 */
+    }
+    
+    .judgment-score {
+      font-size: 24px;
+      text-align: center;
+      margin-top: auto;
+      margin-bottom: 15%; /* 评分位置往上移30% */
+      color: #8b0000;
+      font-weight: bold;
+    }
+    
+    .judgment-signature {
+      font-size: 20px;
+      text-align: right;
+      margin-bottom: 15%; /* 签名位置往上移15% */
+      font-style: italic;
+      padding-bottom: 20px;
+    }
+    
+    .loading-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: #8b0000;
+      font-weight: bold;
+      text-align: center;
+    }
+    
+    .judgment-name-input {
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      width: 150px;
+    }
+    
+    .ranking-sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 200px;
+      height: 100vh;
+      background-color: rgba(139, 0, 0, 0.9);
+      color: #f9f6e8;
+      z-index: 100;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      padding: 10px 0;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-title {
+      text-align: center;
+      padding: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #f9f6e8;
+    }
+    
+    .ranking-scroll-container {
+      position: relative;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+    
+    .ranking-scroll {
+      position: absolute;
+      width: 100%;
+      animation: scrollRanking 30s linear infinite;
+    }
+    
+    @keyframes scrollRanking {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100%); }
+    }
+    
+    /* 当排行榜项目hover时暂停滚动 */
+    .ranking-scroll:hover {
+      animation-play-state: paused;
+    }
+    
+    .ranking-item {
+      padding: 10px;
+      border-bottom: 1px solid rgba(249, 246, 232, 0.3);
+      margin: 0 5px;
+    }
+    
+    .ranking-name {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 3px;
+    }
+    
+    .ranking-score {
+      color: #ffeb3b;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+    
+    .ranking-behavior {
+      font-size: 12px;
+      color: #ddd;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    /* 调整主内容区域以适应侧边栏 */
+    .main-content {
+      margin-left: 200px;
+      width: calc(100% - 200px);
+    }
+    
+    /* 文件上传按钮样式 */
+    .file-upload {
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+    }
+    
+    .file-upload-btn {
+      background-color: #f0f0f0;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .file-upload-btn:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .file-upload-icon {
+      width: 20px;
+      height: 20px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>');
+      background-repeat: no-repeat;
+      background-position: center;
+      margin-right: 5px;
+    }
+    
+    .file-input {
+      display: none;
+    }
+    
+    /* 隐藏调试消息 */
+    .debug-message {
+      display: none;
+    }
+    
+    .ranking-panel {
+      margin-top: 30px;
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+    }
+    
+    .ranking-title {
+      font-size: 20px;
+      color: #8b0000;
+      margin-bottom: 15px;
+    }
+    
+    .ranking-list {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+    
+    .ranking-list th, .ranking-list td {
+      padding: 8px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .ranking-list th {
+      background-color: #f5f5f5;
+    }
+    
+    .ranking-list tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    
+    .ranking-list td.score {
+      font-weight: bold;
+      color: #8b0000;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .visible {
+      display: block;
+    }
+    
+    .clearfix::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+    
+    /* 3D法庭场景相关样式 */
+    #courtroom-3d {
+      display: none;
+      width: 100%;
+      height: 600px;
+      position: relative;
+    }
+    
+    #character-selection {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      max-width: 800px;
+      width: 80%;
+    }
+    
+    .nav-button.back-button {
+      background-color: #5a0000;
+    }
+    
+    .case-number {
+      position: absolute;
+      top: 10%;
+      right: 10%;
+      font-size: 18px;
+      color: #8b0000;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    
+    /* 添加 3D渣男审判庭 按钮样式 */
+    .btn-3d-court {
+      background-color: #8b0000;
+      color: white;
+      padding: 10px 15px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      font-weight: bold;
+    }
+    
+    .btn-3d-court:hover {
+      background-color: #a91010;
+    }
+    
+    .btn-3d-court:active {
+      transform: translateY(1px);
+    }
+    
+    .btn-3d-court:before {
+      content: "🏛️";
+      margin-right: 5px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 左侧排行榜 -->
+  <div class="ranking-sidebar">
+    <div class="sidebar-title">布渣排行榜</div>
+    <div class="ranking-scroll-container">
+      <div class="ranking-scroll" id="ranking-scroll">
+        <!-- 排行榜内容将通过JS动态生成 -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- 主内容区域 -->
+  <div class="main-content">
+    <div class="container">
+      <header>元宇宙衙门 - 情感顾问</header>
+      
+      <div class="courtroom">
+        <div class="drum" id="drum">
+          <div class="drum-instruction">点击鼓开始公审渣男</div>
+        </div>
+      </div>
+      
+      <div class="navigation">
+        <button id="to-chat" class="nav-button">情感咨询</button>
+        <button id="to-3d-court" class="btn-3d-court">3D渣男审判庭</button>
+        <button id="back-from-3d" class="nav-button back-button" style="display: none;">返回</button>
+      </div>
+      
+      <!-- 3D法庭容器 -->
+      <div id="courtroom-3d"></div>
+      
+      <!-- 角色选择面板 -->
+      <div id="character-selection" style="position: relative; display: none;">
+        <!-- 空白容器，将由JS填充 -->
+      </div>
+      
+      <div class="chat-container" id="chat-container">
+        <div id="messages" class="messages clearfix">
+          <div class="bot-message">你好，我是元宇宙衙门的情感顾问。有什么情感问题需要交流吗？</div>
+        </div>
+        <div class="input-area">
+          <div class="file-upload">
+            <label for="chat-file" class="file-upload-btn">
+              <span class="file-upload-icon"></span>
+              上传图片
+            </label>
+            <input type="file" id="chat-file" class="file-input" accept="image/*">
+          </div>
+          <input id="chat-input" class="chat-input" placeholder="在这里输入你的问题..." />
+          <button id="send-button" class="send-button">发送</button>
+        </div>
+      </div>
+      
+      <div class="judgment-panel" id="judgment-panel">
+        <h2>渣男公审大会</h2>
+        <div class="judgment-input-container">
+          <textarea id="judgment-input" class="judgment-input" placeholder="输入聊天记录或情感经历..." maxlength="500"></textarea>
+        </div>
+        <div class="judgment-controls">
+          <div class="file-upload">
+            <label for="judgment-file" class="file-upload-btn">
+              <span class="file-upload-icon"></span>
+              上传截图
+            </label>
+            <input type="file" id="judgment-file" class="file-input" accept="image/*" onchange="previewImage(this, 'judgment-image-preview')">
+          </div>
+          <input type="text" id="name-input" class="judgment-name-input" placeholder="输入对象姓名/昵称">
+          <button id="submit-judgment" class="submit-button">提交公审</button>
+        </div>
+        <div id="judgment-image-preview" class="image-preview" style="margin-top: 10px;"></div>
+        
+        <div id="judgment-result" class="hidden">
+          <div class="scroll-container">
+            <div class="loading-text" id="loading-judgment-text">正在生成渣男判决书...</div>
+            <div class="scroll-content">
+              <div class="judgment-title">渣男判决书</div>
+              <div class="case-number" id="case-number">案件编号：2023-001</div>
+              <div class="defendant-name" id="defendant-name"></div>
+              <div class="judgment-content" id="judgment-text"></div>
+              <div class="judgment-score" id="judgment-score"></div>
+              <div class="judgment-signature">评审大会批</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 渣男排行榜 -->
+        <div class="ranking-panel">
+          <h3 class="ranking-title">布渣排行榜</h3>
+          <table class="ranking-list" id="ranking-table">
+            <thead>
+              <tr>
+                <th>排名</th>
+                <th>姓名/昵称</th>
+                <th>渣度</th>
+                <th>主要行为</th>
+              </tr>
+            </thead>
+            <tbody id="ranking-body">
+              <!-- 排行榜内容将通过JS动态生成 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 添加音频元素 -->
+  <audio id="drum-sound" src="/sounds/drum.mp3" preload="auto"></audio>
+  
+  <!-- 引入3D法庭脚本 -->
+  <script src="/js/courtroom3d.js"></script>
+  
+  <script>
+    // 创建新的音频对象作为备份
+    const drumSoundBackup = new Audio('/sounds/drum.mp3');
+    
+    // 图片预览函数
+    function previewImage(input, previewId) {
+      const preview = document.getElementById(previewId);
+      preview.innerHTML = '';
+      
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.style.maxWidth = '100%';
+          img.style.maxHeight = '200px';
+          img.style.borderRadius = '5px';
+          preview.appendChild(img);
+          
+          // 添加删除按钮
+          const removeBtn = document.createElement('button');
+          removeBtn.textContent = '删除图片';
+          removeBtn.className = 'remove-image-btn';
+          removeBtn.onclick = function() {
+            preview.innerHTML = '';
+            input.value = '';
+          };
+          preview.appendChild(removeBtn);
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      // 获取DOM元素引用
+      const messagesContainer = document.getElementById('messages');
+      const chatInput = document.getElementById('chat-input');
+      const sendButton = document.getElementById('send-button');
+      const toChatButton = document.getElementById('to-chat');
+      const to3DButton = document.getElementById('to-3d-court');
+      const chatContainer = document.getElementById('chat-container');
+      const judgmentPanel = document.getElementById('judgment-panel');
+      const submitJudgment = document.getElementById('submit-judgment');
+      const rankingTable = document.getElementById('ranking-table');
+      const rankingScroll = document.getElementById('ranking-scroll');
+      const characterSelection = document.getElementById('character-selection');
+      
+      // 确保所有需要绑定事件的元素都存在
+      console.log('发送按钮:', sendButton ? '存在' : '不存在');
+      console.log('聊天输入框:', chatInput ? '存在' : '不存在');
+      console.log('消息容器:', messagesContainer ? '存在' : '不存在');
+      
+      // 发送聊天消息函数
+      async function sendChatMessage() {
+        if(!chatInput || !chatInput.value.trim()) return;
+        
+        const userText = chatInput.value.trim();
+        console.log('准备发送消息:', userText);
+        
+        // 显示用户消息
+        const userMessage = document.createElement('div');
+        userMessage.className = 'user-message';
+        userMessage.textContent = userText;
+        messagesContainer.appendChild(userMessage);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+        // 清空输入框
+        chatInput.value = '';
+        
+        // 显示加载中消息
+        const loadingMessage = document.createElement('div');
+        loadingMessage.className = 'bot-message';
+        loadingMessage.textContent = '正在思考...';
+        messagesContainer.appendChild(loadingMessage);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+        try {
+          console.log('发送API请求:', userText);
+          
+          // 调用服务器API
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: userText })
+          });
+          
+          console.log('收到API响应状态:', response.status);
+          
+          if (!response.ok) {
+            throw new Error(`API请求失败: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          console.log('解析的API响应:', data);
+          
+          // 移除加载消息
+          messagesContainer.removeChild(loadingMessage);
+          
+          // 显示AI回复
+          const botMessage = document.createElement('div');
+          botMessage.className = 'bot-message';
+          botMessage.textContent = data.response || '抱歉，无法理解您的问题。';
+          messagesContainer.appendChild(botMessage);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        } catch (error) {
+          console.error('聊天请求失败:', error);
+          
+          // 移除加载消息
+          messagesContainer.removeChild(loadingMessage);
+          
+          // 显示错误信息
+          const errorMessage = document.createElement('div');
+          errorMessage.className = 'bot-message';
+          errorMessage.textContent = '抱歉，发生了错误，请稍后再试。';
+          messagesContainer.appendChild(errorMessage);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+      }
+      
+      // 确保在DOM加载完成后绑定事件
+      if(sendButton) {
+        console.log('正在绑定发送按钮事件');
+        // 移除任何可能存在的旧事件监听器
+        sendButton.removeEventListener('click', sendChatMessage);
+        // 添加新的事件监听器
+        sendButton.addEventListener('click', sendChatMessage);
+      } else {
+        console.error('找不到发送按钮元素!');
+      }
+      
+      // 回车发送
+      if(chatInput) {
+        console.log('正在绑定回车键事件');
+        // 移除任何可能存在的旧事件监听器
+        chatInput.removeEventListener('keypress', function() {});
+        // 添加新的事件监听器
+        chatInput.addEventListener('keypress', function(event) {
+          if(event.key === 'Enter' && chatInput.value.trim()) {
+            console.log('捕获到回车键，发送消息');
+            sendChatMessage();
+          }
+        });
+      }
+      
+      // 绑定3D渣男审判庭按钮
+      if(to3DButton) {
+        console.log('正在绑定3D渣男审判庭按钮');
+        to3DButton.addEventListener('click', function() {
+          console.log('点击3D渣男审判庭按钮');
+          if(window.courtroom3D) {
+            window.courtroom3D.show();
+          } else {
+            console.error('找不到courtroom3D对象');
+          }
+        });
+      } else {
+        console.error('找不到3D渣男审判庭按钮');
+      }
+      
+      // 绑定返回按钮
+      const backFromButton = document.getElementById('back-from-3d');
+      if(backFromButton) {
+        console.log('正在绑定返回按钮');
+        backFromButton.addEventListener('click', function() {
+          console.log('点击返回按钮');
+          if(window.courtroom3D) {
+            window.courtroom3D.hide();
+          }
+        });
+      }
+      
+      // 绑定鼓的点击事件
+      const drum = document.getElementById('drum');
+      if(drum) {
+        console.log('正在绑定鼓点击事件');
+        
+        // 创建一个全新的音频对象
+        const drumAudio = new Audio();
+        
+        // 预先加载鼓声音频文件
+        fetch('/sounds/drum.mp3')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            console.log('成功获取鼓声文件');
+            return response.blob();
+          })
+          .then(blob => {
+            // 创建blob URL
+            const audioURL = URL.createObjectURL(blob);
+            drumAudio.src = audioURL;
+            drumAudio.load();
+            console.log('音频文件已加载到新对象');
+          })
+          .catch(error => {
+            console.error('加载鼓声音频失败:', error);
+          });
+        
+        // 添加鼓点击事件
+        drum.addEventListener('click', function() {
+          console.log('点击鼓');
+          
+          // 使用多种方法尝试播放声音
+          try {
+            // 方法1: 使用预加载的音频对象
+            if (drumAudio.readyState >= 2) {
+              console.log('使用预加载的音频对象播放');
+              drumAudio.currentTime = 0;
+              drumAudio.volume = 1.0;
+              drumAudio.play()
+                .then(() => console.log('鼓声播放成功'))
+                .catch(e => console.error('预加载音频播放失败', e));
+            } 
+            // 方法2: 创建全新音频对象并播放
+            else {
+              console.log('创建新音频对象播放');
+              const newAudio = new Audio('/sounds/drum.mp3');
+              newAudio.volume = 1.0;
+              newAudio.play()
+                .then(() => console.log('新音频对象播放成功'))
+                .catch(e => console.error('新音频对象播放失败', e));
+            }
+            
+            // 方法3: 尝试使用原始audio元素
+            const drumSound = document.getElementById('drum-sound');
+            if (drumSound) {
+              console.log('尝试使用原始audio元素');
+              drumSound.currentTime = 0;
+              drumSound.volume = 1.0;
+              drumSound.play()
+                .then(() => console.log('原始audio元素播放成功'))
+                .catch(e => console.error('原始audio元素播放失败', e));
+            }
+          } catch (error) {
+            console.error('所有播放方法都失败:', error);
+            alert('播放鼓声失败，但会继续处理');
+          }
+          
+          // 即使声音无法播放，也继续后续操作
+          console.log('切换到判决面板');
+          document.getElementById('judgment-panel').style.display = 'block';
+          document.getElementById('chat-container').style.display = 'none';
+        });
+      } else {
+        console.error('找不到鼓元素');
+      }
+      
+      // 初始化3D法庭场景
+      if(window.courtroom3D) {
+        console.log('初始化3D法庭场景');
+        window.courtroom3D.init();
+      } else {
+        console.error('找不到courtroom3D对象');
+      }
+    });
+  </script>
+</body>
+</html>

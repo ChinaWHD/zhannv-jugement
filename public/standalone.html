@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>元宇宙衙门 - 渣男公审大会</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f5f5f5; }
+    h1 { color: #e74c3c; text-align: center; margin-bottom: 30px; }
+    textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; height: 150px; }
+    button { padding: 10px 20px; background: #e74c3c; color: white; border: none; cursor: pointer; display: block; margin: 20px auto; }
+    .result { margin-top: 30px; padding: 20px; background: #fff; border-left: 4px solid #e74c3c; }
+    .stamp { text-align: center; font-size: 1.5em; color: red; margin: 20px 0; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>元宇宙衙门 - 渣男公审大会</h1>
+  
+  <div id="app">
+    <form id="judgment-form">
+      <textarea id="chat-input" placeholder="输入聊天记录或情感经历..."></textarea>
+      <button type="submit">提交公审</button>
+    </form>
+    <div id="result" class="result" style="display:none;"></div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('judgment-form');
+      const input = document.getElementById('chat-input');
+      const result = document.getElementById('result');
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (input.value.trim() === '') {
+          alert('请输入聊天记录或情感经历');
+          return;
+        }
+        
+        // 显示加载状态
+        result.textContent = '正在判决中...';
+        result.style.display = 'block';
+        
+        // 本地判断逻辑
+        setTimeout(function() {
+          const verdict = analyzeText(input.value);
+          result.innerHTML = '<h3>判决结果</h3>' + 
+                             '<div class="stamp">判定：' + verdict.rating + '</div>' +
+                             '<p>' + verdict.explanation + '</p>';
+        }, 1000);
+      });
+      
+      function analyzeText(text) {
+        // 简单的本地判断逻辑
+        const lowerText = text.toLowerCase();
+        
+        if (lowerText.includes('分手') && (lowerText.includes('理由') || lowerText.includes('借口'))) {
+          return {
+            rating: "渣男行为",
+            explanation: "经元宇宙衙门审判，发现对方编造分手理由，判定为<strong>渣男行为</strong>！建议受害者保留证据，远离此人。"
+          };
+        } else if (lowerText.includes('劈腿') || lowerText.includes('出轨') || lowerText.includes('背叛')) {
+          return {
+            rating: "严重渣男行为",
+            explanation: "经元宇宙衙门审判，发现明确的背叛证据，判定为<strong>严重渣男行为</strong>！建议立即断绝关系，并告知朋友圈防止更多人受害。"
+          };
+        } else if (lowerText.includes('骗') || lowerText.includes('谎')) {
+          return {
+            rating: "轻度渣男行为",
+            explanation: "经元宇宙衙门审判，发现不诚实行为，判定为<strong>轻度渣男行为</strong>。建议观察后续表现，保持警惕。"
+          };
+        } else if (text.length < 20) {
+          return {
+            rating: "证据不足",
+            explanation: "输入内容过少，无法做出准确判断。请提供更详细的情况描述。"
+          };
+        } else {
+          return {
+            rating: "暂无明确结论",
+            explanation: "初步判断，尚未发现明显渣男行为。但建议继续保持警惕，关注对方言行是否一致。如有新证据可再次提交公审。"
+          };
+        }
+      }
+    });
+  </script>
+</body>
+</html>

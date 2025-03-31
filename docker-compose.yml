@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  zhannv_judgment:
+    image: "zhannv-judgment:${TAG:-1.0.0}"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    container_name: "zhannv_judgment"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro # 设置容器时区与宿主机保持一致
+      - ./.env:/usr/src/app/.env # 挂载环境变量文件
+    ports:
+      - "7001:4000" # 对外端口7001，容器内部端口4000
+    environment:
+      TZ: "Asia/Shanghai"
+      NODE_ENV: "production"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: '5'

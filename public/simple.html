@@ -1,0 +1,18 @@
+app.get('/', (req, res) => {
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>测试</title>
+        <style>
+          body { background-color: #ff0000; color: white; font-size: 48px; padding: 40px; }
+        </style>
+      </head>
+      <body>
+        <h1>元宇宙衙门</h1>
+        <p>这是一个测试页面</p>
+        <div style="border: 5px solid yellow; padding: 20px;">如果您能看到这个框，说明页面已正确加载</div>
+      </body>
+      </html>
+    `);
+  });
